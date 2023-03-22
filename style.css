@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700&family=Lexend+Deca&family=Montserrat:wght@500&display=swap');
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: 'montserrat', sans-serif;
+}
+.container {
+    width: 30%;
+    height: 550px;
+    background-color: burlywood;
+    margin:50px auto;
+}
+.header {
+    background-image: url(/image/image.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 200px;
+}
+.header h1 {
+    padding: 20px;
+    text-align: center;
+    font-weight: bolder;
+    color: lightgray;
+    font-size: 2.5rem;
+    /* FOR A BACKGROUND TEXT WITH EMBEDDED IMAGE
+    /* background-image: url(/image/image.jpg);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent; */
+}
+.new-todo {
+    display: flex;
+    position: relative;
+    bottom: 40px;
+}
+#newtodo {
+    background: none;
+    border: none;
+}
+#newtodo:focus {
+   outline: none;
+   color: white;
+   font-weight: bolder;
+   font-size: 0.8rem;
+   margin: 5px;
+}
+#newtodo::placeholder {
+    color: white;
+    font-weight: bolder;
+    font-size: 0.8rem;
+    padding: 10px;
+    border: none;
+}
+#btn {
+    padding: 5px;
+    width: 50px;
+    background: salmon;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    margin-left: 200px;
+}
+#btn:hover {
+    cursor: pointer;
+}
+/* #todos-list {
+    height: calc(var(--container-height) - var(--header-height));
+    background-color: #fff;
+    padding: 0.5rem;
+    border: 1px solid rgb(219, 219, 219);
+    overflow: scroll;
+    border-radius: 0 0 5px 5px;
+  } */
+#todos-list .todo {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0.5rem;
+    border-radius: 5px;
+}
+#todos-list .todo p {
+    flex: 1;
+    word-break: break-all;
+}
+#todos-list .todo i {
+    font-size: 0.9rem;
+  }
+  #todos-list .todo * {
+    cursor: pointer;
+    margin-right: 0.5rem;
+  }
+#todos-list .todo:hover {
+    border: none; 
+    border-radius: 0 0 5px 5px;
+    background-color: salmon;
+    padding: 0.5rem;
+    color: #fff;
+}
+.checked {
+    text-decoration: line-through;
+}  

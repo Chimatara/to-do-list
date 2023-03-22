@@ -10,39 +10,141 @@
 // Finally, 
 // call the display function at the end of the add item function to update the screen with the new to-do list.
 
+// SELECTING ELEMENTS
+const form = document.getElementById("todoform");
+const toDoInput = document.getElementById("newtodo");
+const toDoListElement = document.getElementById("todos-list");
 
-const todoList = [];
+let todos = [];
+let editToDoId = -1;
 
-function addItem(item) {
-  todoList.push(item);
-  document.getElementById("new-item").value = "";
-  displayItems();
+// SUBMITTING THE FORM 
+form.addEventListener('submit', function(event) {
+    event.preventDefault(); // this prevents the page from refreshing after submitting the form
+    // console.log('submit')
+
+    saveTodo ();
+    renderTodos(); // this renders the todos the user adds to the interface
+})
+
+// SAVING THE TODO
+function saveTodo() {
+ const toDoValue = toDoInput.value; // this accepts the users input(i.e the todo items)
+
+ // to check if todo is empty
+
+ const isEmpty = toDoValue === '';
+
+ // check for duplicate todo
+ const isDuplicate = todos.some((todo) => todo.value.toUpperCase() === toDoValue.toUpperCase())
+
+ if(isEmpty) {
+    alert("Todo's input is empty")
+ }
+ else if (isDuplicate) {
+   alert("Todo already exist")
+ }
+ else {
+    if(editToDoId >= 0) {
+     todos = todos.map((todo, index) => ({
+        ...todo,
+        value: index === editToDoId ? toDoValue : todo.value,
+      }));
+      editToDoId = -1;
+    } else {
+        todos.push({
+            value: toDoValue,
+            checked: false,
+            color: '#' + Math.floor(Math.random()*16777215).toString(16) // how to generate random colors using Javascript 
+        })
+    }
+  
+    // const todo = {  // this line of code is practically the todo items added as an object
+    //     value: toDoValue,
+    //     checked: false,
+    //     color: '#' + Math.floor(Math.random()*16777215).toString(16) // how to generate random colors using Javascript
+    //  }
+    
+      toDoInput.value = ''; //this sets back the input field to no value inside(ie it refreshes the input field)
+ }
+
 }
 
-function editItem (item) {
- 
+// RENDER TODOS FUNCTION
+function renderTodos() {
+    //CLEAR EVERY ELEMENT BEFOR A NEW RENDER
+    toDoListElement.innerHTML = '';
+
+    // RENDER TODOS
+todos.forEach((todo, index) => {
+    toDoListElement.innerHTML += ` 
+    <div class="todo" id="${index}">
+        <i 
+           class="bi ${todo.checked ?  'bi-check-circle-fill' : 'bi-circle'} "
+           style= "color : ${todo.color}"
+           data-action="check" 
+        ></i>
+        <p class="" data-action="check">${todo.value}</p>
+        <i class="bi bi-pencil-square" style="color: green;" data-action="edit"></i>
+        <i class="bi bi-trash" style="color: red;" data-action="delete"></i>
+    ` // the plus in this code makes the most recent item added appear at the top
+})
 }
 
-function deleteItem (item) {
+// CLICK/ADD EVENT LISTNERS TO ALL THE TODOS(this is basically for the buttons in the todos
+// adding event listner to each button will be a lot of code, so we'll target the todos instead)
 
-}
+toDoListElement.addEventListener('click', (event) => {
+    const target = event.target; // the target targets each item in the todo list i.e, it specifically tells you the particular element you clicked
+    const parentElement = target.parentNode;
 
-function displayItems() {
-  const list = document.getElementById("todo-list");
-  list.innerHTML = "";
-  for (let i = 0; i < todoList.length; i++) {
-    const item = document.createElement("li");
-    item.innerText = todoList[i];
-    list.appendChild(item);
-  }
-}
+    if (parentElement.className !== 'todo') return;
 
-const form = document.querySelector("form");
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const newItem = document.getElementById("new-item").value;
-  addItem(newItem);
+   // todo id
+    const todo = parentElement;
+    const todoId = Number(todo.id);
+
+   //target action i.e how to access the custom attributes used in the js html
+   const action = target.dataset.action;
+
+    action === "check" && checkTodo(todoId);
+    action === "edit" && editTodo(todoId);
+    action === "delete" && deleteTodo(todoId);
+
 });
+
+// A FUNCTION THAT CHECKS THE TO DO
+function checkTodo(todoId) {
+    todos = todos.map((todo, index) => ({
+       ...todo,
+       checked: index === todoId ? !todo.checked : todo.checked,
+    }));
+
+    renderTodos();
+}
+
+
+// EDIT A TODO
+function editTodo(todoId) {
+   toDoInput.value = todos[todoId].value 
+   editToDoId = todoId;
+}
+
+//DELETE TODO
+function deleteTodo(todoId) {
+    todos = todos.filter((todo, index) => index !== todoId);
+    editToDoId = -1
+
+    renderTodos()
+}
+
+
+
+
+
+
+
+
 
 
 
