@@ -14,9 +14,13 @@
 const form = document.getElementById("todoform");
 const toDoInput = document.getElementById("newtodo");
 const toDoListElement = document.getElementById("todos-list");
+const notifiElement = document.querySelector(".notification");
 
-let todos = [];
+let todos = JSON.parse(localStorage.getItem('todos')) || [];
 let editToDoId = -1;
+
+//first render
+renderTodos();
 
 // SUBMITTING THE FORM 
 form.addEventListener('submit', function(event) {
@@ -25,6 +29,7 @@ form.addEventListener('submit', function(event) {
 
     saveTodo ();
     renderTodos(); // this renders the todos the user adds to the interface
+    localStorage.setItem('todos', JSON.stringify(todos));
 })
 
 // SAVING THE TODO
@@ -39,10 +44,10 @@ function saveTodo() {
  const isDuplicate = todos.some((todo) => todo.value.toUpperCase() === toDoValue.toUpperCase())
 
  if(isEmpty) {
-    alert("Todo's input is empty")
+    showNotification("Todo's input is empty")
  }
  else if (isDuplicate) {
-   alert("Todo already exist")
+   showNotification("Todo already exist")
  }
  else {
     if(editToDoId >= 0) {
@@ -72,6 +77,11 @@ function saveTodo() {
 
 // RENDER TODOS FUNCTION
 function renderTodos() {
+    if (todos.length === 0) {
+       toDoListElement.innerHTML = `<center>Nothing to do!</center>`
+       toDoListElement.style.fontWeight = 'bolder'
+        return;
+    }
     //CLEAR EVERY ELEMENT BEFOR A NEW RENDER
     toDoListElement.innerHTML = '';
 
@@ -84,7 +94,7 @@ todos.forEach((todo, index) => {
            style= "color : ${todo.color}"
            data-action="check" 
         ></i>
-        <p class="" data-action="check">${todo.value}</p>
+        <p class="${todo.checked ?  'checked' : ''}" data-action="check">${todo.value}</p>
         <i class="bi bi-pencil-square" style="color: green;" data-action="edit"></i>
         <i class="bi bi-trash" style="color: red;" data-action="delete"></i>
     ` // the plus in this code makes the most recent item added appear at the top
@@ -121,6 +131,7 @@ function checkTodo(todoId) {
     }));
 
     renderTodos();
+    localStorage.setItem('todos', JSON.stringify(todos));
 }
 
 
@@ -130,16 +141,32 @@ function editTodo(todoId) {
    editToDoId = todoId;
 }
 
-//DELETE TODO
+//DELETE A TODO
 function deleteTodo(todoId) {
-    todos = todos.filter((todo, index) => index !== todoId);
-    editToDoId = -1
+   todos = todos.filter((todo, index) => index !== todoId);
+    editToDoId = -1;
 
     renderTodos()
+    localStorage.setItem('todos', JSON.stringify(todos));
 }
 
+//local storage
 
 
+
+//show notification 
+
+// function showNotification(msg) {
+//   notifiElement.innerHTML = msg;
+
+//   // this adds a class name that has already been styled to the div
+//   notifiElement.classList.add('notification-enter');
+
+//   // for notification to dissappear
+//   setTimeout(() => {
+//     notifiElement.classList.remove('notification-enter')
+//   }, 2000)
+// }
 
 
 
